@@ -960,7 +960,8 @@ select.form-control {
   .card-grid-2 { grid-template-columns: 1fr; }
   .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
   .page-header { flex-direction: column; align-items: flex-start; }
-  .app-header { padding: 0 16px; }
+  .app-header { padding: 0 12px; }
+  .header-inner { gap: 8px; height: 56px; }
   .filter-bar { padding: 12px 14px; }
   .tabs-nav { width: 100%; }
   .sticky-summary-content { flex-direction: column; align-items: stretch; }
@@ -968,6 +969,6 @@ select.form-control {
 }
 @media (max-width: 480px) {
   .card-grid-4, .card-grid-3 { grid-template-columns: 1fr; }
-  .header-inner { height: 60px; }
+  .header-inner { height: 54px; }
   .login-card { padding: 28px 22px; }
 }

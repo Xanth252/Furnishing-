@@ -170,6 +170,8 @@ import { AuthService } from '../../services/auth.service';
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
+      flex: 1 1 auto;
     }
     .mobile-nav-toggle {
       display: none;
@@ -180,13 +182,14 @@ import { AuthService } from '../../services/auth.service';
       font-size: 1.1rem;
       cursor: pointer;
       color: #334155;
+      flex-shrink: 0;
     }
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
       text-decoration: none;
-      flex-shrink: 0;
+      min-width: 0;
     }
     .brand:hover { opacity: 0.95; }
     .brand-logo-wrap {
@@ -210,17 +213,24 @@ import { AuthService } from '../../services/auth.service';
       display: flex;
       flex-direction: column;
       line-height: 1.2;
+      min-width: 0;
     }
     .brand-name {
       font-size: 0.88rem;
       font-weight: 800;
       letter-spacing: 0.04em;
       color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .brand-sub {
       font-size: 0.68rem;
       color: #64748b;
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .desktop-nav {
@@ -412,10 +422,57 @@ import { AuthService } from '../../services/auth.service';
       .desktop-nav { display: none; }
       .mobile-nav-toggle { display: block; }
     }
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0 12px;
+        gap: 8px;
+        height: 56px;
+      }
+      .header-left {
+        gap: 8px;
+      }
+      .brand {
+        gap: 8px;
+      }
+      .brand-logo-wrap {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+      }
+      .brand-name {
+        font-size: 0.78rem;
+        letter-spacing: 0.02em;
+      }
       .brand-sub { display: none; }
+      .header-right {
+        gap: 6px;
+      }
+      .user-chip {
+        padding: 0;
+        background: transparent;
+        border: none;
+        gap: 0;
+      }
       .user-name { display: none; }
+      .user-status-dot { display: none; }
+      .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.72rem;
+      }
+      .btn-logout {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+      }
       .btn-logout span:first-child { display: none; }
+    }
+    @media (max-width: 380px) {
+      .brand-name {
+        font-size: 0.72rem;
+      }
+      .btn-logout {
+        display: none;
+      }
     }
   `]
 })
