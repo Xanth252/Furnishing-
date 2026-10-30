@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -143,11 +143,16 @@ import { AuthService } from '../../services/auth.service';
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
     .app-header {
       background: #ffffff;
       border-bottom: 1px solid #e2e8f0;
-      position: sticky;
-      top: 0;
+      position: relative;
       z-index: 100;
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
     }
@@ -328,21 +333,33 @@ import { AuthService } from '../../services/auth.service';
     /* Mobile Drawer */
     .mobile-drawer-overlay {
       position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.5);
-      backdrop-filter: blur(4px);
-      z-index: 200;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 99999;
       display: flex;
     }
     .mobile-drawer {
-      width: 280px;
-      max-width: 85vw;
+      width: 290px;
+      max-width: 82vw;
       background: #ffffff;
-      height: 100%;
+      height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
-      box-shadow: 4px 0 24px rgba(0,0,0,0.15);
-      animation: slideIn 0.2s ease-out;
+      box-shadow: 6px 0 32px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.22s ease-out;
+      position: relative;
+      z-index: 100000;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     @keyframes slideIn {
       from { transform: translateX(-100%); }
@@ -354,6 +371,7 @@ import { AuthService } from '../../services/auth.service';
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0;
     }
     .mobile-drawer-links {
       padding: 16px;
@@ -364,15 +382,16 @@ import { AuthService } from '../../services/auth.service';
       overflow-y: auto;
     }
     .mobile-drawer-links a {
-      padding: 10px 14px;
+      padding: 11px 14px;
       border-radius: 8px;
       text-decoration: none;
       color: #334155;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 10px;
+      transition: background 0.15s;
     }
     .mobile-drawer-links a:hover {
       background: #f1f5f9;
@@ -386,6 +405,7 @@ import { AuthService } from '../../services/auth.service';
       padding: 16px;
       border-top: 1px solid #e2e8f0;
       background: #f8fafc;
+      flex-shrink: 0;
     }
 
     @media (max-width: 1024px) {
@@ -399,7 +419,7 @@ import { AuthService } from '../../services/auth.service';
     }
   `]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
   showMobileDrawer = false;
 
   constructor(public auth: AuthService, private router: Router) {}
@@ -411,14 +431,32 @@ export class HeaderComponent {
 
   toggleMobileDrawer() {
     this.showMobileDrawer = !this.showMobileDrawer;
+    this.updateBodyScroll();
   }
 
   closeMobileDrawer() {
     this.showMobileDrawer = false;
+    this.updateBodyScroll();
   }
 
   @HostListener('document:keydown.escape')
   onEscape() {
-    this.showMobileDrawer = false;
+    this.closeMobileDrawer();
+  }
+
+  private updateBodyScroll() {
+    if (typeof document !== 'undefined') {
+      if (this.showMobileDrawer) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+    }
   }
 }
