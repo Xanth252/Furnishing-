@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Next.js
+.next/
+**/.next/
+out/
+
+# Angular
+dist/
+**/dist/
+.angular/
+**/.angular/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!**/.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

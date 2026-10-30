@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+}
+
+model Customer {
+  id                     Int         @id @default(autoincrement())
+  name                   String
+  contactNumber          String      @default("")
+  alternateContactNumber String      @default("")
+  address                String      @default("")
+  notes                  String      @default("")
+  createdAt              DateTime    @default(now())
+  quotations             Quotation[]
+  products               Product[]
+}
+
+model Quotation {
+  id                 Int               @id @default(autoincrement())
+  customerId         Int
+  customer           Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  quotationNumber    String            @default("")
+  title              String            @default("")
+  createdAt          DateTime          @default(now())
+  remarks            String            @default("")
+  advancePayment     Decimal           @default(0) @db.Decimal(18, 2)
+  advancePaymentDate DateTime?
+  discountType       String            @default("percent")
+  discountValue      Decimal           @default(0) @db.Decimal(18, 2)
+  discountAmount     Decimal           @default(0) @db.Decimal(18, 2)
+  subTotal           Decimal           @default(0) @db.Decimal(18, 2)
+  finalAmount        Decimal           @default(0) @db.Decimal(18, 2)
+  items              QuotationItem[]
+  windows            QuotationWindow[]
+  products           Product[]
+}
+
+model QuotationItem {
+  id          Int       @id @default(autoincrement())
+  quotationId Int
+  quotation   Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  srNo        Int       @default(1)
+  particular  String
+  description String?
+  quantity    Float     @default(1)
+  unit        String    @default("mtr")
+  rate        Decimal   @default(0) @db.Decimal(18, 2)
+  total       Decimal   @default(0) @db.Decimal(18, 2)
+}
+
+model QuotationWindow {
+  id              Int       @id @default(autoincrement())
+  quotationId     Int
+  quotation       Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  location        String
+  windowName      String    @default("")
+  treatmentType   String    @default("Curtain")
+  width           Float
+  height          Float
+  panels          Int?
+  isDoubleCurtain Boolean   @default(false)
+  curtainType     String?   @default("Main")
+  sheerWidth      Float?
+  sheerHeight     Float?
+  sheerPanels     Int?
+  requirement     Float
+  unit            String    @default("m")
+  remarks         String    @default("")
+}
+
+model Product {
+  id                   Int         @id @default(autoincrement())
+  customerId           Int
+  customer             Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  quotationId          Int?
+  quotation            Quotation?  @relation(fields: [quotationId], references: [id], onDelete: SetNull)
+  productName          String
+  serialNumber         String      @default("")
+  company              String      @default("")
+  productType          String
+  quantity             Int         @default(1)
+  colour               String      @default("")
+  measurement          String      @default("")
+  dateOrdered          DateTime?
+  expectedDeliveryDate DateTime?
+  internalRemarks      String      @default("")
+  quotationAmount      Decimal     @default(0) @db.Decimal(18, 2)
+  discountAmount       Decimal     @default(0) @db.Decimal(18, 2)
+  quotationStatus      String      @default("Pending")
+  advancePayment       Decimal     @default(0) @db.Decimal(18, 2)
+  paymentStatus        String      @default("Pending")
+  paymentDate          DateTime?
+  paymentRemarks       String      @default("")
+  workStages           WorkStage[]
+}
+
+model WorkStage {
+  id            Int       @id @default(autoincrement())
+  productId     Int
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  stageOrder    Int
+  stageName     String
+  isCompleted   Boolean   @default(false)
+  dateCompleted DateTime?
+  remarks       String    @default("")
+}
+
+model AppSetting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @default(now())
+}
+
+model SavedParticular {
+  id          Int      @id @default(autoincrement())
+  particular  String   @unique
+  defaultUnit String   @default("mtr")
+  defaultRate Decimal  @default(0) @db.Decimal(18, 2)
+  usageCount  Int      @default(1)
+  lastUsedAt  DateTime @default(now())
+}

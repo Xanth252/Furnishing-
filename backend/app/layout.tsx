@@ -1,0 +1,20 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Pukale Furnishing Centre API',
+  description: 'CRM API built with Next.js and PostgreSQL',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body style={{ fontFamily: 'system-ui, sans-serif', margin: 0, padding: 0 }}>
+        {children}
+      </body>
+    </html>
+  );
+}
